@@ -1,190 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEST UPDATOR</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#f5f7fb;color:#172033}
-header{background:#111827;color:white;padding:20px;text-align:center}
-header h1{margin:0}
-main{max-width:1000px;margin:auto;padding:25px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.card,#cart{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 20px #0001}
-.card h3{margin-top:0}
-.price{font-size:22px;font-weight:bold;margin:12px 0}
-button{border:0;border-radius:8px;padding:11px 16px;cursor:pointer}
-.add{background:#2563eb;color:white}
-.remove{background:#ef4444;color:white}
-#cart{display:none;margin-top:25px}
-.payment{background:#ecfdf5;border:1px solid #86efac;padding:18px;border-radius:12px;margin-top:20px}
-.payment strong{font-size:18px}
-.pay-number{font-size:25px;font-weight:bold;letter-spacing:1px;margin:8px 0}
-.whatsapp{display:block;background:#16a34a;color:white;text-decoration:none;text-align:center;padding:14px;border-radius:9px;margin-top:15px}
-.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
-.total{font-size:20px;font-weight:bold;margin-top:15px}
-footer{text-align:center;background:#111827;color:white;padding:20px;margin-top:30px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEST UPDATOR</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 22px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      opacity: .8;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 15px;
+      padding: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+      text-align: center;
+    }
+
+    .product img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      border-radius: 18px;
+      margin-bottom: 12px;
+    }
+
+    .product h3 {
+      margin: 8px 0;
+    }
+
+    .product p {
+      color: #6b7280;
+      min-height: 40px;
+    }
+
+    .price {
+      font-size: 21px;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add {
+      background: #111827;
+      color: white;
+      width: 100%;
+    }
+
+    #cart {
+      display: none;
+      background: white;
+      margin-top: 30px;
+      padding: 22px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 18px;
+    }
+
+    .payment {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .checkout {
+      background: #16a34a;
+      color: white;
+      width: 100%;
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+    }
+  </style>
 </head>
 
 <body>
+
 <header>
-<h1>BEST UPDATOR</h1>
-<p>Communication & Number Services</p>
+  <h1 id="shopName">BEST UPDATOR</h1>
+  <p>Your trusted online shop</p>
 </header>
 
-<main>
-<h2>Shop Our Services</h2>
-<div id="products" class="grid">
-<p>Loading products...</p>
-</div>
+<div class="container">
 
-<div id="cart">
-<h2>Your Cart</h2>
-<div id="items"></div>
-<div class="total">Total: ₦<span id="total">0</span></div>
+  <h2>Available Products</h2>
 
-<div class="payment">
-<strong>💳 Pay by Kuda Bank Transfer</strong>
-<p>Bank: Kuda Bank</p>
-<p>Account Name: <strong>ODUNTAN ADESHINA</strong></p>
-<p>Account Number:</p>
-<div class="pay-number">2086000901</div>
-<p>Transfer the exact amount shown above.</p>
-<p>After payment, contact us on WhatsApp with your payment confirmation.</p>
-</div>
+  <div id="products" class="products">
+    <div class="empty">Loading products...</div>
+  </div>
 
-<a id="whatsapp" class="whatsapp" target="_blank">
-I've Made Payment — Send Order on WhatsApp
-</a>
-</div>
-</main>
+  <div id="cart">
+    <h2>Your Cart</h2>
 
-<footer>
-© 2026 BEST UPDATOR
-</footer>
+    <div id="cartItems"></div>
 
-<script>
-const supabaseClient = window.supabase.createClient(
-  window.SUPABASE_URL,
-  window.SUPABASE_KEY
-);
-
-let products=[];
-let cart=[];
-
-async function loadProducts(){
-  const {data,error}=await supabaseClient
-    .from('products')
-    .select('*')
-    .order('created_at',{ascending:false});
-
-  if(error){
-    document.getElementById('products').innerHTML=
-      '<p>Unable to load products.</p>';
-    console.error(error);
-    return;
-  }
-
-  products=data||[];
-  renderProducts();
-}
-
-function renderProducts(){
-  const box=document.getElementById('products');
-
-  if(!products.length){
-    box.innerHTML='<p>No products available yet.</p>';
-    return;
-  }
-
-  box.innerHTML=products.map(p=>`
-    <div class="card">
-      ${p.image_url ? `<img src="${p.image_url}" style="width:100%;border-radius:10px">` : ''}
-      <h3>${escapeHtml(p.name)}</h3>
-      <p>${escapeHtml(p.description||'')}</p>
-      <div class="price">₦${Number(p.price).toLocaleString()}</div>
-      <button class="add" onclick="addToCart('${p.id}')">
-        Add to Cart
-      </button>
+    <div class="total">
+      Total: ₦<span id="cartTotal">0</span>
     </div>
-  `).join('');
-}
 
-function addToCart(id){
-  const product=products.find(p=>p.id===id);
-  if(!product)return;
-
-  cart.push(product);
-  renderCart();
-
-  // Immediately show cart/payment details
-  document.getElementById('cart').style.display='block';
-  document.getElementById('cart').scrollIntoView({
-    behavior:'smooth'
-  });
-}
-
-function removeItem(index){
-  cart.splice(index,1);
-  renderCart();
-
-  if(!cart.length){
-    document.getElementById('cart').style.display='none';
-  }
-}
-
-function renderCart(){
-  const items=document.getElementById('items');
-
-  items.innerHTML=cart.length
-    ? cart.map((p,i)=>`
-      <div class="row">
-        <span>${escapeHtml(p.name)}</span>
-        <span>
-          ₦${Number(p.price).toLocaleString()}
-          <button class="remove" onclick="removeItem(${i})">
-            Remove
-          </button>
-        </span>
-      </div>
-    `).join('')
-    : '<p>Your cart is empty.</p>';
-
-  const total=cart.reduce(
-    (sum,p)=>sum+Number(p.price),0
-  );
-
-  document.getElementById('total').textContent=
-    total.toLocaleString();
-
-  const order=cart.map(p=>p.name).join(', ');
-
-  const message=
-    `Hello BEST UPDATOR,%0A%0A`+
-    `I have made payment for:%0A${encodeURIComponent(order)}%0A%0A`+
-    `Total: ₦${encodeURIComponent(total.toLocaleString())}%0A`+
-    `Payment method: Kuda Bank Transfer%0A`+
-    `Account Name: ODUNTAN ADESHINA%0A`+
-    `Account Number: 2086000901`;
-
-  document.getElementById('whatsapp').href=
-    `https://wa.me/2349132454685?text=${message}`;
-}
-
-function escapeHtml(text){
-  return String(text)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
-}
-
-loadProducts();
-</script>
-</body>
-</html>
+    <div class="payment
