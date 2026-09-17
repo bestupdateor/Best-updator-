@@ -3,48 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEST UPDATOR — Online Store</title>
+<title>BEST UPDATOR</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
-:root{--blue:#2563eb;--dark:#111827;--green:#16a34a;--bg:#f5f7fb}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172033}
-header{background:var(--dark);color:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
-.logo{font-size:24px;font-weight:800}.cartBtn{background:var(--blue);color:#fff;border:0;padding:11px 16px;border-radius:9px;font-weight:bold;cursor:pointer}
-.hero{background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;padding:55px 6%}.hero h1{font-size:42px;margin:0 0 10px}.hero p{max-width:650px;color:#dbeafe}
-main{padding:42px 6%;max-width:1200px;margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 7px 22px #00000012}.icon{font-size:36px}.price{font-size:22px;font-weight:bold;margin:14px 0}.add{width:100%;padding:12px;background:var(--blue);color:white;border:0;border-radius:9px;cursor:pointer;font-weight:bold}
-#cart{display:none;background:white;margin-top:28px;padding:25px;border-radius:16px}.row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #e5e7eb}.remove{border:0;background:#fee2e2;color:#b91c1c;border-radius:6px;padding:5px 8px}
-.total{font-size:22px;font-weight:bold;text-align:right;margin:20px 0}.checkout{background:#16a34a;color:white;border:0;padding:14px 20px;border-radius:9px;font-weight:bold;cursor:pointer;width:100%}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:10;padding:20px;overflow:auto}.box{background:#fff;max-width:520px;margin:40px auto;padding:25px;border-radius:16px}.box input{width:100%;padding:13px;margin:7px 0 14px;border:1px solid #d1d5db;border-radius:8px}.close{float:right;border:0;background:none;font-size:24px;cursor:pointer}.whatsapp{display:block;text-align:center;margin-top:12px;color:#15803d}
-footer{text-align:center;background:#111827;color:#cbd5e1;padding:28px}
-@media(max-width:600px){.hero h1{font-size:34px}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f5f7fb;color:#172033}
+header{background:#111827;color:white;padding:20px;text-align:center}
+header h1{margin:0}
+main{max-width:1000px;margin:auto;padding:25px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card,#cart{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 20px #0001}
+.card h3{margin-top:0}
+.price{font-size:22px;font-weight:bold;margin:12px 0}
+button{border:0;border-radius:8px;padding:11px 16px;cursor:pointer}
+.add{background:#2563eb;color:white}
+.remove{background:#ef4444;color:white}
+#cart{display:none;margin-top:25px}
+.payment{background:#ecfdf5;border:1px solid #86efac;padding:18px;border-radius:12px;margin-top:20px}
+.payment strong{font-size:18px}
+.pay-number{font-size:25px;font-weight:bold;letter-spacing:1px;margin:8px 0}
+.whatsapp{display:block;background:#16a34a;color:white;text-decoration:none;text-align:center;padding:14px;border-radius:9px;margin-top:15px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+.total{font-size:20px;font-weight:bold;margin-top:15px}
+footer{text-align:center;background:#111827;color:white;padding:20px;margin-top:30px}
 </style>
 </head>
+
 <body>
-<header><div class="logo">BEST UPDATOR</div><button class="cartBtn" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</button></header>
-
-<section class="hero">
+<header>
 <h1>BEST UPDATOR</h1>
-<p>Browse our communication and number-related services, add what you need to your cart, and place your order online.</p>
-</section>
+<p>Communication & Number Services</p>
+</header>
 
-<main><h2>Shop Our Services</h2><div id="products" class="grid"><p>Loading products...</p></div><div id="cart"><h2>Your Cart</h2><div id="items"></div><div class="total">Total: <span id="currency">NGN</span> <span id="total">0.00</span></div><button class="checkout" onclick="openCheckout()">Proceed to Checkout</button></div></main>
+<main>
+<h2>Shop Our Services</h2>
+<div id="products" class="grid">
+<p>Loading products...</p>
+</div>
 
-<div class="modal" id="modal"><div class="box">
-<button class="close" onclick="closeCheckout()">×</button><h2>Checkout</h2>
-<p>Enter your details. Your order will be prepared for confirmation.</p>
-<label>Full name</label><input id="name" placeholder="Your name">
-<label>Email</label><input id="email" type="email" placeholder="you@example.com">
-<label>WhatsApp number</label><input id="phone" placeholder="+234...">
-<button class="checkout" onclick="placeOrder()">Place Order</button>
-<a class="whatsapp" href="https://wa.me/2349132454685" target="_blank">Need help? Chat on WhatsApp: +234 913 245 4685</a>
-</div></div>
+<div id="cart">
+<h2>Your Cart</h2>
+<div id="items"></div>
+<div class="total">Total: ₦<span id="total">0</span></div>
 
-<footer>© 2026 BEST UPDATOR · WhatsApp: +234 913 245 4685</footer>
+<div class="payment">
+<strong>💳 Pay by Kuda Bank Transfer</strong>
+<p>Bank: Kuda Bank</p>
+<p>Account Name: <strong>ODUNTAN ADESHINA</strong></p>
+<p>Account Number:</p>
+<div class="pay-number">2086000901</div>
+<p>Transfer the exact amount shown above.</p>
+<p>After payment, contact us on WhatsApp with your payment confirmation.</p>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>const sb=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_KEY);let products=[],cart=[];const $=id=>document.getElementById(id);async function init(){const {data:settings}=await sb.from('shop_settings').select('*').eq('id',1).single();if(settings){document.querySelector('.logo').textContent=settings.shop_name||'BEST UPDATOR';$('currency').textContent=settings.currency||'NGN';document.querySelector('footer').textContent='© 2026 '+(settings.shop_name||'BEST UPDATOR')+' · WhatsApp: '+(settings.whatsapp||'');document.querySelectorAll('.whatsapp').forEach(a=>{if(settings.whatsapp){let n=settings.whatsapp.replace(/\D/g,'');a.href='https://wa.me/'+n;a.textContent='Need help? Chat on WhatsApp: '+settings.whatsapp}})}const {data,error}=await sb.from('products').select('*').order('created_at',{ascending:false});if(error){$('products').innerHTML='<p>Could not load products.</p>';return}products=data||[];renderProducts()}function renderProducts(){$('products').innerHTML=products.map(p=>`<div class="card"><div class="icon">📦</div>${p.image_url?`<img src="${esc(p.image_url)}" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px">`:''}<h3>${esc(p.name)}</h3><p>${esc(p.description||'')}</p><div class="price">${esc($('currency').textContent)} ${Number(p.price).toFixed(2)}</div><button class="add" onclick="add('${p.id}')">Add to cart</button></div>`).join('')||'<p>No products available yet.</p>'}function add(id){const p=products.find(x=>x.id===id);if(!p)return;cart.push({id:p.id,name:p.name,price:Number(p.price)});renderCart();$('cart').style.display='block'}function removeItem(i){cart.splice(i,1);renderCart()}function renderCart(){$('#count')&&($('count').textContent=cart.length);$('items').innerHTML=cart.length?cart.map((x,i)=>`<div class="row"><span>${esc(x.name)}</span><span>${Number(x.price).toFixed(2)} <button class="remove" onclick="removeItem(${i})">Remove</button></span></div>`).join(''):'<p>Your cart is empty.</p>';$('total').textContent=cart.reduce((a,x)=>a+x.price,0).toFixed(2)}function toggleCart(){const e=$('cart');e.style.display=e.style.display==='block'?'none':'block'}function openCheckout(){if(!cart.length)return alert('Your cart is empty.');$('modal').style.display='block'}function closeCheckout(){$('modal').style.display='none'}async function placeOrder(){const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();if(!name||!phone)return alert('Please complete your name and WhatsApp number.');const total=cart.reduce((a,x)=>a+x.price,0);const {data:order,error}=await sb.from('orders').insert({customer_name:name,customer_email:email||null,customer_phone:phone,total,payment_method:'kuda_transfer'}).select().single();if(error)return alert(error.message);const {error:itemError}=await sb.from('order_items').insert(cart.map(x=>({order_id:order.id,product_id:x.id,product_name:x.name,unit_price:x.price,quantity:1,subtotal:x.price})));if(itemError)return alert(itemError.message);const msg=`Hello BEST UPDATOR, I placed an order.
-Order ID: ${order.id}
-Name: ${name}
-WhatsApp: ${phone}
-Total: ${$('currency').textContent} ${total.toFixed(2)}`;window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');alert('Order submitted. Please complete your bank transfer and send the payment proof on WhatsApp.');cart=[];renderCart();closeCheckout()}function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}init();</script>
+<a id="whatsapp" class="whatsapp" target="_blank">
+I've Made Payment — Send Order on WhatsApp
+</a>
+</div>
+</main>
+
+<footer>
+© 2026 BEST UPDATOR
+</footer>
+
+<script>
+const supabaseClient = window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_KEY
+);
+
+let products=[];
+let cart=[];
+
+async function loadProducts(){
+  const {data,error}=await supabaseClient
+    .from('products')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(error){
+    document.getElementById('products').innerHTML=
+      '<p>Unable to load products.</p>';
+    console.error(error);
+    return;
+  }
+
+  products=data||[];
+  renderProducts();
+}
+
+function renderProducts(){
+  const box=document.getElementById('products');
+
+  if(!products.length){
+    box.innerHTML='<p>No products available yet.</p>';
+    return;
+  }
+
+  box.innerHTML=products.map(p=>`
+    <div class="card">
+      ${p.image_url ? `<img src="${p.image_url}" style="width:100%;border-radius:10px">` : ''}
+      <h3>${escapeHtml(p.name)}</h3>
+      <p>${escapeHtml(p.description||'')}</p>
+      <div class="price">₦${Number(p.price).toLocaleString()}</div>
+      <button class="add" onclick="addToCart('${p.id}')">
+        Add to Cart
+      </button>
+    </div>
+  `).join('');
+}
+
+function addToCart(id){
+  const product=products.find(p=>p.id===id);
+  if(!product)return;
+
+  cart.push(product);
+  renderCart();
+
+  // Immediately show cart/payment details
+  document.getElementById('cart').style.display='block';
+  document.getElementById('cart').scrollIntoView({
+    behavior:'smooth'
+  });
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+
+  if(!cart.length){
+    document.getElementById('cart').style.display='none';
+  }
+}
+
+function renderCart(){
+  const items=document.getElementById('items');
+
+  items.innerHTML=cart.length
+    ? cart.map((p,i)=>`
+      <div class="row">
+        <span>${escapeHtml(p.name)}</span>
+        <span>
+          ₦${Number(p.price).toLocaleString()}
+          <button class="remove" onclick="removeItem(${i})">
+            Remove
+          </button>
+        </span>
+      </div>
+    `).join('')
+    : '<p>Your cart is empty.</p>';
+
+  const total=cart.reduce(
+    (sum,p)=>sum+Number(p.price),0
+  );
+
+  document.getElementById('total').textContent=
+    total.toLocaleString();
+
+  const order=cart.map(p=>p.name).join(', ');
+
+  const message=
+    `Hello BEST UPDATOR,%0A%0A`+
+    `I have made payment for:%0A${encodeURIComponent(order)}%0A%0A`+
+    `Total: ₦${encodeURIComponent(total.toLocaleString())}%0A`+
+    `Payment method: Kuda Bank Transfer%0A`+
+    `Account Name: ODUNTAN ADESHINA%0A`+
+    `Account Number: 2086000901`;
+
+  document.getElementById('whatsapp').href=
+    `https://wa.me/2349132454685?text=${message}`;
+}
+
+function escapeHtml(text){
+  return String(text)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+loadProducts();
+</script>
 </body>
 </html>
