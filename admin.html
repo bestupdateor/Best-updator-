@@ -1,1 +1,623 @@
-<!doctype html><html><head><meta
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEST UPDATOR Admin</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#f5f7fb;color:#172033}
+header{background:#111827;color:#fff;padding:18px 6%;display:flex;justify-content:space-between}
+main{max-width:1100px;margin:30px auto;padding:0 18px}
+.box{background:#fff;padding:20px;border-radius:14px;margin:15px 0;box-shadow:0 5px 20px #0001}
+input,textarea,select{width:100%;padding:11px;margin:7px 0 12px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
+button{padding:11px 15px;border:0;border-radius:8px;background:#2563eb;color:white;font-weight:700;margin:4px;cursor:pointer}
+.danger{background:#dc2626}
+.muted{color:#64748b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.hidden{display:none}
+.item{border:1px solid #e5e7eb;padding:12px;border-radius:10px;margin:8px 0}
+</style>
+</head>
+
+<body>
+
+<header>
+<b>BEST UPDATOR ADMIN</b>
+<button onclick="logout()">Log out</button>
+</header>
+
+<main>
+
+<div id="login" class="box">
+<h2>Admin login</h2>
+
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Sign in</button>
+
+<p id="msg"></p>
+</div>
+
+
+<div id="dash" class="hidden">
+
+<div class="box">
+<h2>Shop settings</h2>
+
+<div class="grid">
+
+<input id="shop_name" placeholder="Shop name">
+<input id="whatsapp" placeholder="WhatsApp number">
+<input id="bank_name" placeholder="Bank name">
+<input id="account_name" placeholder="Account name">
+<input id="account_number" placeholder="Account number">
+<input id="currency" placeholder="Currency">
+
+</div>
+
+<button onclick="saveSettings()">Save settings</button>
+</div>
+
+
+<div class="box">
+
+<h2>Add / edit product</h2>
+
+<input id="pid" type="hidden">
+
+<div class="grid">
+
+<input id="pname" placeholder="Product name">
+
+<input id="price" type="number" step="0.01" placeholder="Price">
+
+<input id="stock" type="number" placeholder="Stock">
+
+<input id="category" placeholder="Category">
+
+<input id="image_url" placeholder="Image URL">
+
+</div>
+
+<textarea id="description" placeholder="Description"></textarea>
+
+<button onclick="saveProduct()">Save product</button>
+
+<button class="danger" onclick="clearForm()">Clear</button>
+
+</div>
+
+
+<div class="box">
+
+<h2>Products</h2>
+
+<div id="products"></div>
+
+</div>
+
+
+<div class="box">
+
+<h2>Orders</h2>
+
+<div id="orders"></div>
+
+</div>
+
+</div>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+
+<script>
+
+const sb = supabase.createClient(
+window.SUPABASE_URL,
+window.SUPABASE_KEY
+);
+
+let current = null;
+
+const $ = id => document.getElementById(id);
+
+
+async function init(){
+
+const {data:{session}} =
+await sb.auth.getSession();
+
+if(session){
+
+current = session;
+
+showDash();
+
+}else{
+
+showLogin();
+
+}
+
+}
+
+
+function showLogin(){
+
+$('login').classList.remove('hidden');
+
+$('dash').classList.add('hidden');
+
+}
+
+
+function showDash(){
+
+$('login').classList.add('hidden');
+
+$('dash').classList.remove('hidden');
+
+loadAll();
+
+}
+
+
+async function login(){
+
+const {data,error} =
+await sb.auth.signInWithPassword({
+
+email:$('email').value,
+
+password:$('password').value
+
+});
+
+if(error){
+
+$('msg').textContent = error.message;
+
+return;
+
+}
+
+current = data.session;
+
+showDash();
+
+}
+
+
+async function logout(){
+
+await sb.auth.signOut();
+
+showLogin();
+
+}
+
+
+async function loadAll(){
+
+await loadSettings();
+
+await loadProducts();
+
+await loadOrders();
+
+}
+
+
+async function loadSettings(){
+
+const {data,error} =
+await sb
+.from('shop_settings')
+.select('*')
+.eq('id',1)
+.single();
+
+if(error){
+
+$('msg').textContent = error.message;
+
+return;
+
+}
+
+for(
+const k of [
+'shop_name',
+'whatsapp',
+'bank_name',
+'account_name',
+'account_number',
+'currency'
+]
+){
+
+$(k).value = data[k] || '';
+
+}
+
+}
+
+
+async function saveSettings(){
+
+const payload = {
+
+shop_name:$('shop_name').value,
+
+whatsapp:$('whatsapp').value,
+
+bank_name:$('bank_name').value,
+
+account_name:$('account_name').value,
+
+account_number:$('account_number').value,
+
+currency:$('currency').value,
+
+updated_at:new Date().toISOString()
+
+};
+
+const {error} =
+await sb
+.from('shop_settings')
+.update(payload)
+.eq('id',1);
+
+alert(
+error
+? error.message
+: 'Settings saved'
+);
+
+}
+
+
+async function loadProducts(){
+
+const {data,error} =
+await sb
+.from('products')
+.select('*')
+.order('created_at',{ascending:false});
+
+if(error){
+
+$('products').textContent =
+error.message;
+
+return;
+
+}
+
+$('products').innerHTML =
+data.map(p => `
+
+<div class="item">
+
+<b>${esc(p.name)}</b>
+
+—
+
+${Number(p.price).toFixed(2)}
+
+${esc(($('currency').value)||'')}
+
+<br>
+
+<span class="muted">
+
+Stock: ${p.stock}
+
+·
+
+${esc(p.category||'')}
+
+</span>
+
+<br>
+
+<button onclick='editProduct(${JSON.stringify(p)})'>
+Edit
+</button>
+
+<button
+class="danger"
+onclick="deleteProduct('${p.id}')">
+
+Delete
+
+</button>
+
+</div>
+
+`).join('')
+
+||
+
+'<p class="muted">No products yet.</p>';
+
+}
+
+
+function editProduct(p){
+
+$('pid').value = p.id;
+
+$('pname').value = p.name;
+
+$('price').value = p.price;
+
+$('stock').value = p.stock;
+
+$('category').value = p.category || '';
+
+$('image_url').value = p.image_url || '';
+
+$('description').value = p.description || '';
+
+scrollTo(0,0);
+
+}
+
+
+function clearForm(){
+
+[
+'pid',
+'pname',
+'price',
+'stock',
+'category',
+'image_url',
+'description'
+]
+.forEach(x => $(x).value='');
+
+}
+
+
+async function saveProduct(){
+
+const payload = {
+
+name:$('pname').value.trim(),
+
+price:Number($('price').value||0),
+
+stock:Number($('stock').value||0),
+
+category:$('category').value.trim(),
+
+image_url:$('image_url').value.trim(),
+
+description:$('description').value.trim()
+
+};
+
+if(!payload.name){
+
+return alert(
+'Product name is required'
+);
+
+}
+
+
+let q =
+$('pid').value
+
+?
+
+sb
+.from('products')
+.update(payload)
+.eq('id',$('pid').value)
+
+:
+
+sb
+.from('products')
+.insert(payload);
+
+
+const {error} = await q;
+
+
+if(error){
+
+return alert(error.message);
+
+}
+
+
+alert('Product saved');
+
+clearForm();
+
+loadProducts();
+
+}
+
+
+async function deleteProduct(id){
+
+if(!confirm('Delete this product?')){
+
+return;
+
+}
+
+const {error} =
+await sb
+.from('products')
+.delete()
+.eq('id',id);
+
+alert(
+error
+? error.message
+: 'Deleted'
+);
+
+loadProducts();
+
+}
+
+
+async function loadOrders(){
+
+const {data,error} =
+await sb
+.from('orders')
+.select('*')
+.order('created_at',{ascending:false});
+
+if(error){
+
+$('orders').textContent =
+error.message;
+
+return;
+
+}
+
+
+$('orders').innerHTML =
+data.map(o => `
+
+<div class="item">
+
+<b>${esc(o.customer_name)}</b>
+
+—
+
+${Number(o.total).toFixed(2)}
+
+${esc($('currency').value||'')}
+
+<br>
+
+${esc(o.customer_phone)}
+
+·
+
+${esc(o.customer_email||'')}
+
+<br>
+
+Status:
+
+<select
+onchange="updateOrder('${o.id}','status',this.value)">
+
+<option ${o.status==='new'?'selected':''}>
+new
+</option>
+
+<option ${o.status==='processing'?'selected':''}>
+processing
+</option>
+
+<option ${o.status==='completed'?'selected':''}>
+completed
+</option>
+
+<option ${o.status==='cancelled'?'selected':''}>
+cancelled
+</option>
+
+</select>
+
+Payment:
+
+<select
+onchange="updateOrder('${o.id}','payment_status',this.value)">
+
+<option ${o.payment_status==='pending'?'selected':''}>
+pending
+</option>
+
+<option ${o.payment_status==='paid'?'selected':''}>
+paid
+</option>
+
+<option ${o.payment_status==='failed'?'selected':''}>
+failed
+</option>
+
+</select>
+
+<br>
+
+<small>
+${new Date(o.created_at).toLocaleString()}
+</small>
+
+</div>
+
+`).join('')
+
+||
+
+'<p class="muted">No orders yet.</p>';
+
+}
+
+
+async function updateOrder(id,col,val){
+
+const {error} =
+await sb
+.from('orders')
+.update({[col]:val})
+.eq('id',id);
+
+if(error){
+
+alert(error.message);
+
+}
+
+}
+
+
+function esc(s){
+
+return String(s ?? '')
+.replace(
+/[&<>"']/g,
+
+m => ({
+
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+
+}[m])
+
+);
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
