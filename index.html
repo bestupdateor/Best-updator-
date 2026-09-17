@@ -1,763 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Best Updator Store</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEST UPDATOR</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      background: #f5f5f5;
-      color: #222;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+}
 
-    header {
-      background: #111;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+header {
+  background: #111827;
+  color: white;
+  padding: 25px 15px;
+  text-align: center;
+}
 
-    header h1 {
-      margin-bottom: 8px;
-    }
+header h1 {
+  margin: 0;
+  font-size: 30px;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
-    }
+header p {
+  margin: 8px 0 0;
+}
 
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 25px 15px;
+}
 
-    .product {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
+h2 {
+  text-align: center;
+}
 
-    .product img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      background: #ddd;
-    }
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
 
-    .product h3 {
-      margin: 12px 0 6px;
-    }
+.product {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
 
-    .description {
-      color: #666;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
+.product h3 {
+  margin-top: 0;
+}
 
-    .price {
-      font-weight: bold;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
+.price {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 15px 0;
+}
 
-    .stock {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+button {
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
 
-    button {
-      border: none;
-      background: #111;
-      color: white;
-      padding: 11px 15px;
-      border-radius: 7px;
-      cursor: pointer;
-    }
+.add {
+  background: #2563eb;
+  color: white;
+  width: 100%;
+}
 
-    button:hover {
-      opacity: 0.85;
-    }
+.add:hover {
+  background: #1d4ed8;
+}
 
-    button:disabled {
-      background: #999;
-      cursor: not-allowed;
-    }
+#cart {
+  display: none;
+  background: white;
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
 
-    .cart {
-      margin-top: 35px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
 
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid #ddd;
-    }
+.remove {
+  background: #ef4444;
+  color: white;
+  padding: 7px 10px;
+}
 
-    .quantity {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+.total {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 20px;
+}
 
-    .quantity button {
-      padding: 5px 10px;
-    }
+.payment {
+  margin-top: 25px;
+  padding: 20px;
+  background: #ecfdf5;
+  border: 1px solid #86efac;
+  border-radius: 12px;
+}
 
-    .total {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 20px;
-    }
+.account-number {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 10px 0;
+}
 
-    .payment {
-      margin-top: 25px;
-      padding: 20px;
-      background: #f0f0f0;
-      border-radius: 10px;
-    }
+.whatsapp {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: #16a34a;
+  color: white;
+  padding: 14px;
+  border-radius: 9px;
+  margin-top: 20px;
+}
 
-    .payment h3 {
-      margin-bottom: 10px;
-    }
-
-    .payment p {
-      margin: 7px 0;
-    }
-
-    .checkout {
-      margin-top: 15px;
-      width: 100%;
-      background: #008000;
-      font-size: 17px;
-    }
-
-    .empty,
-    .loading,
-    .error {
-      color: #777;
-      padding: 10px 0;
-    }
-
-    .error {
-      color: #b00020;
-    }
-
-    .customer-form {
-      margin-top: 20px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 10px;
-    }
-
-    .customer-form h3 {
-      margin-bottom: 15px;
-    }
-
-    .customer-form input,
-    .customer-form textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 7px;
-      font-size: 15px;
-    }
-
-    .customer-form textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      margin-top: 30px;
-      background: #111;
-      color: white;
-    }
-  </style>
+footer {
+  margin-top: 40px;
+  background: #111827;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1 id="shopName">Best Updator Store</h1>
-    <p>Welcome to our online shop</p>
-  </header>
+<header>
+  <h1>BEST UPDATOR</h1>
+  <p>Communication & Number Services</p>
+</header>
 
-  <main class="container">
+<main>
 
-    <h2 style="margin-bottom:20px;">Our Products</h2>
+<h2>Shop Our Services</h2>
 
-    <div class="products" id="products">
-      <p class="loading">Loading products...</p>
+<div class="products">
+
+  <div class="product">
+    <h3>Product 1</h3>
+    <p>Communication and number service.</p>
+    <div class="price">₦5,000</div>
+    <button class="add" onclick="addToCart('Product 1', 5000)">
+      Add to Cart
+    </button>
+  </div>
+
+  <div class="product">
+    <h3>Product 2</h3>
+    <p>Communication and number service.</p>
+    <div class="price">₦10,000</div>
+    <button class="add" onclick="addToCart('Product 2', 10000)">
+      Add to Cart
+    </button>
+  </div>
+
+  <div class="product">
+    <h3>Product 3</h3>
+    <p>Communication and number service.</p>
+    <div class="price">₦15,000</div>
+    <button class="add" onclick="addToCart('Product 3', 15000)">
+      Add to Cart
+    </button>
+  </div>
+
+  <div class="product">
+    <h3>Product 4</h3>
+    <p>Communication and number service.</p>
+    <div class="price">₦20,000</div>
+    <button class="add" onclick="addToCart('Product 4', 20000)">
+      Add to Cart
+    </button>
+  </div>
+
+</div>
+
+<div id="cart">
+
+  <h2>Your Cart</h2>
+
+  <div id="cartItems"></div>
+
+  <div class="total">
+    Total: ₦<span id="cartTotal">0</span>
+  </div>
+
+  <div class="payment">
+    <h3>💳 Payment</h3>
+
+    <p>Bank: <strong>Kuda Bank</strong></p>
+
+    <p>
+      Account Name:
+      <strong>ODUNTAN ADESHINA</strong>
+    </p>
+
+    <p>Account Number:</p>
+
+    <div class="account-number">
+      2086000901
     </div>
 
-    <div class="cart">
-      <h2>Your Cart</h2>
-
-      <div id="cartItems">
-        <p class="empty">Your cart is empty.</p>
-      </div>
-
-      <div class="total">
-        Total: <span id="currencySymbol">₦</span><span id="cartTotal">0</span>
-      </div>
-
-      <div class="customer-form">
-        <h3>Customer Information</h3>
-
-        <input
-          type="text"
-          id="customerName"
-          placeholder="Your full name"
-        >
-
-        <input
-          type="email"
-          id="customerEmail"
-          placeholder="Your email address"
-        >
-
-        <input
-          type="tel"
-          id="customerPhone"
-          placeholder="Your phone number"
-        >
-
-        <textarea
-          id="shippingAddress"
-          placeholder="Your delivery address"
-        ></textarea>
-      </div>
-
-      <div class="payment">
-        <h3>Payment Information</h3>
-
-        <p>
-          <strong>Bank:</strong>
-          <span id="bankName">Loading...</span>
-        </p>
-
-        <p>
-          <strong>Account Name:</strong>
-          <span id="accountName">Loading...</span>
-        </p>
-
-        <p>
-          <strong>Account Number:</strong>
-          <span id="accountNumber">Loading...</span>
-        </p>
-
-        <p style="margin-top:12px;">
-          After making payment, keep your payment receipt and contact us
-          to confirm your order.
-        </p>
-
-        <button class="checkout" onclick="checkout()">
-          Proceed With Order
-        </button>
-      </div>
-    </div>
-
-  </main>
-
-  <footer>
-    <p>© 2026 Best Updator Store. All rights reserved.</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-
-  <script>
-    let supabaseClient;
-    let products = [];
-    let cart = [];
-
-    let shopSettings = {
-      shop_name: "BEST UPDATOR",
-      whatsapp: "",
-      bank_name: "Kuda Bank",
-      account_name: "ODUNTAN ADESHINA",
-      account_number: "2086000901",
-      currency: "NGN"
-    };
-
-    function formatMoney(amount) {
-      return Number(amount || 0).toLocaleString("en-NG");
-    }
-
-    function currencySymbol(currency) {
-      if (currency === "NGN") return "₦";
-      if (currency === "USD") return "$";
-      if (currency === "EUR") return "€";
-      if (currency === "GBP") return "£";
-
-      return currency + " ";
-    }
+    <p>
+      Transfer the exact amount shown above.
+    </p>
 
-    async function loadShopSettings() {
-      const { data, error } = await supabaseClient
-        .from("shop_settings")
-        .select("*")
-        .order("id", { ascending: true })
-        .limit(1)
-        .maybeSingle();
+    <p>
+      After payment, contact us on WhatsApp with your payment confirmation.
+    </p>
 
-      if (error) {
-        console.error("Shop settings error:", error);
-        return;
-      }
+    <a
+      id="whatsapp"
+      class="whatsapp"
+      href="#"
+      target="_blank">
+      I've Made Payment — Send Order on WhatsApp
+    </a>
 
-      if (data) {
-        shopSettings = data;
-      }
+  </div>
 
-      document.getElementById("shopName").textContent =
-        shopSettings.shop_name || "BEST UPDATOR";
+</div>
 
-      document.getElementById("bankName").textContent =
-        shopSettings.bank_name || "Kuda Bank";
-
-      document.getElementById("accountName").textContent =
-        shopSettings.account_name || "ODUNTAN ADESHINA";
-
-      document.getElementById("accountNumber").textContent =
-        shopSettings.account_number || "2086000901";
-
-      document.getElementById("currencySymbol").textContent =
-        currencySymbol(shopSettings.currency || "NGN");
-
-      document.title =
-        shopSettings.shop_name || "Best Updator Store";
-    }
-
-    async function loadProducts() {
-      const productsContainer = document.getElementById("products");
-
-      const { data, error } = await supabaseClient
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Products error:", error);
+</main>
 
-        productsContainer.innerHTML =
-          '<p class="error">Unable to load products. Please try again later.</p>';
+<footer>
+  © 2026 BEST UPDATOR
+</footer>
 
-        return;
-      }
+<script>
 
-      products = data || [];
+let cart = [];
 
-      displayProducts();
-    }
+function addToCart(name, price) {
 
-    function displayProducts() {
-      const productsContainer =
-        document.getElementById("products");
+  cart.push({
+    name: name,
+    price: price
+  });
 
-      if (products.length === 0) {
-        productsContainer.innerHTML =
-          '<p class="empty">No products available yet.</p>';
+  renderCart();
 
-        return;
-      }
+  document.getElementById("cart").style.display = "block";
 
-      const symbol =
-        currencySymbol(shopSettings.currency || "NGN");
+  document.getElementById("cart").scrollIntoView({
+    behavior: "smooth"
+  });
+}
 
-      productsContainer.innerHTML = products.map(product => {
+function removeFromCart(index) {
 
-        const stock = Number(product.stock || 0);
+  cart.splice(index, 1);
 
-        return `
-          <div class="product">
+  renderCart();
 
-            <img
-              src="${product.image_url || 'https://via.placeholder.com/500x400?text=Product'}"
-              alt="${escapeHtml(product.name || 'Product')}"
-              onerror="this.src='https://via.placeholder.com/500x400?text=Product'"
-            >
+  if (cart.length === 0) {
+    document.getElementById("cart").style.display = "none";
+  }
+}
 
-            <h3>${escapeHtml(product.name || "Product")}</h3>
+function renderCart() {
 
-            ${
-              product.description
-                ? `<div class="description">
-                    ${escapeHtml(product.description)}
-                   </div>`
-                : ""
-            }
+  const cartItems =
+    document.getElementById("cartItems");
 
-            <div class="price">
-              ${symbol}${formatMoney(product.price)}
-            </div>
+  cartItems.innerHTML = "";
 
-            <div class="stock">
-              ${
-                stock > 0
-                  ? `${stock} available`
-                  : "Out of stock"
-              }
-            </div>
+  let total = 0;
 
-            <button
-              onclick="addToCart('${product.id}')"
-              ${stock <= 0 ? "disabled" : ""}
-            >
-              ${stock > 0 ? "Add To Cart" : "Out of Stock"}
-            </button>
+  cart.forEach(function(item, index) {
 
-          </div>
-        `;
-      }).join("");
-    }
+    total += item.price;
 
-    function escapeHtml(value) {
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+    const div = document.createElement("div");
 
-    function addToCart(productId) {
-      const product =
-        products.find(p => String(p.id) === String(productId));
+    div.className = "cart-item";
 
-      if (!product) return;
+    div.innerHTML = `
+      <span>
+        ${item.name} —
+        ₦${item.price.toLocaleString()}
+      </span>
 
-      const stock = Number(product.stock || 0);
+      <button
+        class="remove"
+        onclick="removeFromCart(${index})">
+        Remove
+      </button>
+    `;
 
-      if (stock <= 0) {
-        alert("This product is out of stock.");
-        return;
-      }
+    cartItems.appendChild(div);
 
-      const existing =
-        cart.find(item => String(item.id) === String(productId));
+  });
 
-      if (existing) {
+  document.getElementById("cartTotal")
+    .textContent = total.toLocaleString();
 
-        if (existing.quantity >= stock) {
-          alert("You cannot add more than the available stock.");
-          return;
-        }
+  let orderList = cart
+    .map(item => item.name)
+    .join(", ");
 
-        existing.quantity++;
-
-      } else {
-
-        cart.push({
-          ...product,
-          quantity: 1
-        });
-
-      }
-
-      displayCart();
-    }
-
-    function increaseQuantity(productId) {
-      const item =
-        cart.find(item => String(item.id) === String(productId));
-
-      const product =
-        products.find(p => String(p.id) === String(productId));
-
-      if (!item || !product) return;
-
-      const stock = Number(product.stock || 0);
-
-      if (item.quantity >= stock) {
-        alert("You have reached the available stock.");
-        return;
-      }
-
-      item.quantity++;
-
-      displayCart();
-    }
-
-    function decreaseQuantity(productId) {
-      const item =
-        cart.find(item => String(item.id) === String(productId));
-
-      if (!item) return;
-
-      item.quantity--;
-
-      if (item.quantity <= 0) {
-        cart = cart.filter(
-          item => String(item.id) !== String(productId)
-        );
-      }
-
-      displayCart();
-    }
-
-    function removeFromCart(productId) {
-      cart = cart.filter(
-        item => String(item.id) !== String(productId)
-      );
-
-      displayCart();
-    }
-
-    function displayCart() {
-      const cartItems =
-        document.getElementById("cartItems");
-
-      const cartTotal =
-        document.getElementById("cartTotal");
-
-      if (cart.length === 0) {
-
-        cartItems.innerHTML =
-          '<p class="empty">Your cart is empty.</p>';
-
-        cartTotal.textContent = "0";
-
-        return;
-      }
-
-      const symbol =
-        currencySymbol(shopSettings.currency || "NGN");
-
-      cartItems.innerHTML = cart.map(item => `
-        <div class="cart-item">
-
-          <div>
-            <strong>${escapeHtml(item.name)}</strong>
-            <br>
-            ${symbol}${formatMoney(item.price)}
-          </div>
-
-          <div class="quantity">
-
-            <button
-              onclick="decreaseQuantity('${item.id}')"
-            >
-              −
-            </button>
-
-            <span>${item.quantity}</span>
-
-            <button
-              onclick="increaseQuantity('${item.id}')"
-            >
-              +
-            </button>
-
-            <button
-              onclick="removeFromCart('${item.id}')"
-            >
-              Remove
-            </button>
-
-          </div>
-
-        </div>
-      `).join("");
-
-      const total = cart.reduce(
-        (sum, item) =>
-          sum + (Number(item.price) * item.quantity),
-        0
-      );
-
-      cartTotal.textContent = formatMoney(total);
-    }
-
-    async function checkout() {
-
-      if (cart.length === 0) {
-        alert("Please add a product to your cart first.");
-        return;
-      }
-
-      const customerName =
-        document.getElementById("customerName").value.trim();
-
-      const customerEmail =
-        document.getElementById("customerEmail").value.trim();
-
-      const customerPhone =
-        document.getElementById("customerPhone").value.trim();
-
-      const shippingAddress =
-        document.getElementById("shippingAddress").value.trim();
-
-      if (!customerName) {
-        alert("Please enter your name.");
-        return;
-      }
-
-      if (!customerEmail) {
-        alert("Please enter your email.");
-        return;
-      }
-
-      if (!customerPhone) {
-        alert("Please enter your phone number.");
-        return;
-      }
-
-      if (!shippingAddress) {
-        alert("Please enter your delivery address.");
-        return;
-      }
-
-      const total = cart.reduce(
-        (sum, item) =>
-          sum + (Number(item.price) * item.quantity),
-        0
-      );
-
-      const itemsText = cart.map(item => ({
-        product_id: item.id,
-        name: item.name,
-        price: Number(item.price),
-        quantity: item.quantity
-      }));
-
-      const { data, error } = await supabaseClient
-        .from("orders")
-        .insert([{
-          customer_name: customerName,
-          customer_email: customerEmail,
-          customer_phone: customerPhone,
-          shipping_address: shippingAddress,
-          total: total,
-          status: "pending",
-          payment_status: "unpaid",
-          payment_method: "Kuda Bank Transfer"
-        }])
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Order error:", error);
-
-        alert(
-          "We could not submit your order. Please try again."
-        );
-
-        return;
-      }
-
-      const symbol =
-        currencySymbol(shopSettings.currency || "NGN");
-
-      let message =
-        "Hello BEST UPDATOR, I want to confirm my order.%0A%0A";
-
-      cart.forEach(item => {
-        message +=
-          encodeURIComponent(
-            `${item.name} x ${item.quantity} = ${symbol}${formatMoney(item.price * item.quantity)}`
-          ) + "%0A";
-      });
-
-      message += "%0A";
-      message +=
-        encodeURIComponent(
-          `Total: ${symbol}${formatMoney(total)}`
-        );
-
-      message += "%0A%0A";
-      message +=
-        encodeURIComponent(
-          `Customer: ${customerName}`
-        );
-
-      message += "%0A";
-      message +=
-        encodeURIComponent(
-          `Order ID: ${data.id}`
-        );
-
-      alert(
-        "Order submitted successfully!%0A%0A" +
-        "Please make payment to:%0A" +
-        `${shopSettings.bank_name}%0A` +
-        `${shopSettings.account_name}%0A` +
-        `${shopSettings.account_number}%0A%0A` +
-        "Your order has been recorded."
-      );
-
-      if (shopSettings.whatsapp) {
-
-        const phone =
-          shopSettings.whatsapp.replace(/\D/g, "");
-
-        window.open(
-          `https://wa.me/${phone}?text=${message}`,
-          "_blank"
-        );
-      }
-
-      cart = [];
-
-      displayCart();
-
-      document.getElementById("customerName").value = "";
-      document.getElementById("customerEmail").value = "";
-      document.getElementById("customerPhone").value = "";
-      document.getElementById("shippingAddress").value = "";
-    }
-
-    async function init() {
-
-      if (
-        typeof window.SUPABASE_URL === "undefined" ||
-        typeof window.SUPABASE_KEY === "undefined"
-      ) {
-        document.getElementById("products").innerHTML =
-          '<p class="error">Supabase configuration is missing. Please check config.js.</p>';
-
-        return;
-      }
-
-      supabaseClient =
-        window.supabase.createClient(
-          window.SUPABASE_URL,
-          window.SUPABASE_KEY
-        );
-
-      await loadShopSettings();
-
-      await loadProducts();
-
-      displayCart();
-    }
-
-    init();
-  </script>
+  let message =
+    "Hello BEST UPDATOR,%0A%0A" +
+    "I have made payment for: " +
+    encodeURIComponent(orderList) +
+    "%0A%0A" +
+    "Total: ₦" +
+    encodeURIComponent(total.toLocaleString()) +
+    "%0A%0A" +
+    "Payment: Kuda Bank Transfer%0A" +
+    "Account Name: ODUNTAN ADESHINA%0A" +
+    "Account Number: 2086000901";
+
+  document.getElementById("whatsapp").href =
+    "https://wa.me/2349132454685?text=" + message;
+}
+
+</script>
 
 </body>
 </html>
