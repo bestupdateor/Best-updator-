@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEST UPDATOR — Online Store</title>
+<style>
+:root{--blue:#2563eb;--dark:#111827;--green:#16a34a;--bg:#f5f7fb}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172033}
+header{background:var(--dark);color:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.logo{font-size:24px;font-weight:800}.cartBtn{background:var(--blue);color:#fff;border:0;padding:11px 16px;border-radius:9px;font-weight:bold;cursor:pointer}
+.hero{background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;padding:55px 6%}.hero h1{font-size:42px;margin:0 0 10px}.hero p{max-width:650px;color:#dbeafe}
+main{padding:42px 6%;max-width:1200px;margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 7px 22px #00000012}.icon{font-size:36px}.price{font-size:22px;font-weight:bold;margin:14px 0}.add{width:100%;padding:12px;background:var(--blue);color:white;border:0;border-radius:9px;cursor:pointer;font-weight:bold}
+#cart{display:none;background:white;margin-top:28px;padding:25px;border-radius:16px}.row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #e5e7eb}.remove{border:0;background:#fee2e2;color:#b91c1c;border-radius:6px;padding:5px 8px}
+.total{font-size:22px;font-weight:bold;text-align:right;margin:20px 0}.checkout{background:#16a34a;color:white;border:0;padding:14px 20px;border-radius:9px;font-weight:bold;cursor:pointer;width:100%}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:10;padding:20px;overflow:auto}.box{background:#fff;max-width:520px;margin:40px auto;padding:25px;border-radius:16px}.box input{width:100%;padding:13px;margin:7px 0 14px;border:1px solid #d1d5db;border-radius:8px}.close{float:right;border:0;background:none;font-size:24px;cursor:pointer}.whatsapp{display:block;text-align:center;margin-top:12px;color:#15803d}
+footer{text-align:center;background:#111827;color:#cbd5e1;padding:28px}
+@media(max-width:600px){.hero h1{font-size:34px}}
+</style>
+</head>
+<body>
+<header><div class="logo">BEST UPDATOR</div><button class="cartBtn" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</button></header>
+
+<section class="hero">
+<h1>BEST UPDATOR</h1>
+<p>Browse our communication and number-related services, add what you need to your cart, and place your order online.</p>
+</section>
+
+<main><h2>Shop Our Services</h2><div id="products" class="grid"><p>Loading products...</p></div><div id="cart"><h2>Your Cart</h2><div id="items"></div><div class="total">Total: <span id="currency">NGN</span> <span id="total">0.00</span></div><button class="checkout" onclick="openCheckout()">Proceed to Checkout</button></div></main>
+
+<div class="modal" id="modal"><div class="box">
+<button class="close" onclick="closeCheckout()">×</button><h2>Checkout</h2>
+<p>Enter your details. Your order will be prepared for confirmation.</p>
+<label>Full name</label><input id="name" placeholder="Your name">
+<label>Email</label><input id="email" type="email" placeholder="you@example.com">
+<label>WhatsApp number</label><input id="phone" placeholder="+234...">
+<button class="checkout" onclick="placeOrder()">Place Order</button>
+<a class="whatsapp" href="https://wa.me/2349132454685" target="_blank">Need help? Chat on WhatsApp: +234 913 245 4685</a>
+</div></div>
+
+<footer>© 2026 BEST UPDATOR · WhatsApp: +234 913 245 4685</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>const sb=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_KEY);let products=[],cart=[];const $=id=>document.getElementById(id);async function init(){const {data:settings}=await sb.from('shop_settings').select('*').eq('id',1).single();if(settings){document.querySelector('.logo').textContent=settings.shop_name||'BEST UPDATOR';$('currency').textContent=settings.currency||'NGN';document.querySelector('footer').textContent='© 2026 '+(settings.shop_name||'BEST UPDATOR')+' · WhatsApp: '+(settings.whatsapp||'');document.querySelectorAll('.whatsapp').forEach(a=>{if(settings.whatsapp){let n=settings.whatsapp.replace(/\D/g,'');a.href='https://wa.me/'+n;a.textContent='Need help? Chat on WhatsApp: '+settings.whatsapp}})}const {data,error}=await sb.from('products').select('*').order('created_at',{ascending:false});if(error){$('products').innerHTML='<p>Could not load products.</p>';return}products=data||[];renderProducts()}function renderProducts(){$('products').innerHTML=products.map(p=>`<div class="card"><div class="icon">📦</div>${p.image_url?`<img src="${esc(p.image_url)}" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px">`:''}<h3>${esc(p.name)}</h3><p>${esc(p.description||'')}</p><div class="price">${esc($('currency').textContent)} ${Number(p.price).toFixed(2)}</div><button class="add" onclick="add('${p.id}')">Add to cart</button></div>`).join('')||'<p>No products available yet.</p>'}function add(id){const p=products.find(x=>x.id===id);if(!p)return;cart.push({id:p.id,name:p.name,price:Number(p.price)});renderCart();$('cart').style.display='block'}function removeItem(i){cart.splice(i,1);renderCart()}function renderCart(){$('#count')&&($('count').textContent=cart.length);$('items').innerHTML=cart.length?cart.map((x,i)=>`<div class="row"><span>${esc(x.name)}</span><span>${Number(x.price).toFixed(2)} <button class="remove" onclick="removeItem(${i})">Remove</button></span></div>`).join(''):'<p>Your cart is empty.</p>';$('total').textContent=cart.reduce((a,x)=>a+x.price,0).toFixed(2)}function toggleCart(){const e=$('cart');e.style.display=e.style.display==='block'?'none':'block'}function openCheckout(){if(!cart.length)return alert('Your cart is empty.');$('modal').style.display='block'}function closeCheckout(){$('modal').style.display='none'}async function placeOrder(){const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();if(!name||!phone)return alert('Please complete your name and WhatsApp number.');const total=cart.reduce((a,x)=>a+x.price,0);const {data:order,error}=await sb.from('orders').insert({customer_name:name,customer_email:email||null,customer_phone:phone,total,payment_method:'kuda_transfer'}).select().single();if(error)return alert(error.message);const {error:itemError}=await sb.from('order_items').insert(cart.map(x=>({order_id:order.id,product_id:x.id,product_name:x.name,unit_price:x.price,quantity:1,subtotal:x.price})));if(itemError)return alert(itemError.message);const msg=`Hello BEST UPDATOR, I placed an order.
+Order ID: ${order.id}
+Name: ${name}
+WhatsApp: ${phone}
+Total: ${$('currency').textContent} ${total.toFixed(2)}`;window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');alert('Order submitted. Please complete your bank transfer and send the payment proof on WhatsApp.');cart=[];renderCart();closeCheckout()}function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}init();</script>
+</body>
+</html>
